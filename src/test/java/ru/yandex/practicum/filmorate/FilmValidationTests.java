@@ -97,10 +97,22 @@ public class FilmValidationTests {
     }
 
     @Test
-    public void testFilmCorrectWhen200SymbolsInDescription() throws Exception {
+    public void testValidFilmWhen200SymbolsInDescription() throws Exception {
         String str = "Здесь 20 символов...";
         str = str.repeat(10);
         film.setDescription(str);
+        getResultActions(film).andExpect(status().isOk());
+    }
+
+    @Test
+    public void testInvalidFilmIWithIncorrectReleaseDate() throws Exception {
+        film.setReleaseDate(LocalDate.of(1895, 12, 27));
+        getResultActions(film).andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void testValidFilmIWithCorrectReleaseDate() throws Exception {
+        film.setReleaseDate(LocalDate.of(1895, 12, 28));
         getResultActions(film).andExpect(status().isOk());
     }
 

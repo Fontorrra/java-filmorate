@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.IdAlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.IdDoesNotExistsException;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/films")
+@Slf4j
 public class FilmController {
 
     HashMap<Integer, Film> films = new HashMap<>();
@@ -20,9 +22,11 @@ public class FilmController {
 
     @PostMapping
     public Film createFilm(@Valid @RequestBody Film film) throws ValidationException, IdAlreadyExistsException {
+        log.info("Received POST request for /films endpoint with body {}", film);
+
         if (isNotValid(film)) {
-            //log.warn("Неправильная дата релиза или длительность фильма");
-            throw new ValidationException("Неправильная дата фильма или его длительность");
+            log.warn("Film validation failed for {}", film);
+            throw new ValidationException("Film validation failed");
         }
 
         if (film.getId() == null) {
@@ -33,22 +37,33 @@ public class FilmController {
             id++;
         }
         else if (films.containsKey(film.getId())) {
-            throw new IdAlreadyExistsException("Фильм с аким id уже существует");
+            log.warn("Film with id {} already exists", film.getId());
+            throw new IdAlreadyExistsException("Film with this id already exists");
         }
         films.put(film.getId(), film);
+        log.info("Successfully created film {}", film);
         return film;
     }
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) throws  ValidationException, IdDoesNotExistsException {
-        if (isNotValid(film)) throw new ValidationException("Неправильная дата фильма или его длительность");
-        if (!films.containsKey(film.getId())) throw new IdDoesNotExistsException("Фидьма с таким id е существует");
+        log.info("Received PUT request for /films endpoint with body {}", film);
+        if (isNotValid(film)) {
+            log.warn("Film validation failed for {}", film);
+            throw new ValidationException("Film validation failed");
+        }
+        if (!films.containsKey(film.getId())){
+            log.warn("Film with id {} does not exist", film.getId());
+            throw new IdDoesNotExistsException("Film with this id does not exist");
+        }
         films.put(film.getId(), film);
+        log.info("Film updated: {}", film);
         return film;
     }
 
     @GetMapping
     public Collection<Film> getFilms() {
+        log.info("Received GET request for /films endpoint");
         return films.values();
     }
 

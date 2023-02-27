@@ -14,7 +14,6 @@ import java.util.HashMap;
 @Slf4j
 @RestController
 @RequestMapping("/users")
-
 public class UserController {
 
     HashMap<Integer, User> users = new HashMap<>();
@@ -24,8 +23,8 @@ public class UserController {
 
     @PostMapping
     public User createUser(@Valid @RequestBody User user) throws IdAlreadyExistsException {
+        log.info("Received POST request to endpoint /users with body {}", user);
         setUserName(user);
-
         if (user.getId() == null) {
             while(users.containsKey(id)) {
                 id++;
@@ -34,22 +33,30 @@ public class UserController {
             id++;
         }
         else if (users.containsKey(user.getId())) {
-            throw new IdAlreadyExistsException("Пользователь с таким id уже существует");
+            log.warn("User with ID {} already exists", user.getId());
+            throw new IdAlreadyExistsException("User with this ID  already exists");
         }
         users.put(user.getId(), user);
+        log.info("User {} added successfully", user);
         return user;
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) throws IdDoesNotExistsException {
+        log.info("Received PUT request to endpoint /users with body {}", user);
         setUserName(user);
-        if (!users.containsKey(user.getId())) throw new IdDoesNotExistsException("Пользователя с таким id не существует");
+        if (!users.containsKey(user.getId())) {
+            log.warn("User with ID {} does not exist", user.getId());
+            throw new IdDoesNotExistsException("User with this ID does not exist");
+        }
         users.put(user.getId(), user);
+        log.info("User {} updated successfully", user);
         return user;
     }
 
     @GetMapping
     public Collection<User> getFilms() {
+        log.info("Received GET request to endpoint /users");
         return users.values();
     }
 
