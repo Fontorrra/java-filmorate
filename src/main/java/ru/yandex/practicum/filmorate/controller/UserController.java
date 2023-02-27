@@ -18,10 +18,20 @@ import java.util.HashMap;
 public class UserController {
 
     HashMap<Integer, User> users = new HashMap<>();
+    private int id = 0;
 
     @PostMapping
     public User createUser(@Valid @RequestBody User user) throws IdAlreadyExistsException {
-        if (users.containsKey(user.getId())) throw new IdAlreadyExistsException();
+        if (user.getId() == null) {
+            while(users.containsKey(id)) {
+                id++;
+            }
+            user.setId(id);
+            id++;
+        }
+        else if (users.containsKey(user.getId())) {
+            throw new IdAlreadyExistsException();
+        }
         users.put(user.getId(), user);
         return user;
     }

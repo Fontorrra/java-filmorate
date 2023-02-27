@@ -13,7 +13,7 @@ import java.time.*;
 @Builder
 public class Film {
 
-    private final int id;
+    private Integer id;
 
     @NotNull(message = "Имя не должно быть null")
     @NotBlank(message = "Имя не может быть пустым")

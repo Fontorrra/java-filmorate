@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class User {
-    private final int id;
+    private Integer id;
 
     @NotNull(message = "email не может быть null")
     @Email(message = "Неправильный формат email")

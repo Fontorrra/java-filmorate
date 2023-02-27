@@ -15,6 +15,7 @@ import java.util.HashMap;
 public class FilmController {
 
     HashMap<Integer, Film> films = new HashMap<>();
+    private int id;
 
     @PostMapping
     public Film createFilm(@Valid @RequestBody Film film) throws ValidationException, IdAlreadyExistsException {
@@ -24,7 +25,16 @@ public class FilmController {
             throw new ValidationException();
         }
 
-        if (films.containsKey(film.getId())) throw new IdAlreadyExistsException();
+        if (film.getId() == null) {
+            while (films.containsKey(id)) {
+                id++;
+            }
+            film.setId(id);
+            id++;
+        }
+        else if (films.containsKey(film.getId())) {
+            throw new IdAlreadyExistsException();
+        }
         films.put(film.getId(), film);
         return film;
     }
