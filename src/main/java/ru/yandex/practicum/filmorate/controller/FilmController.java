@@ -53,6 +53,6 @@ public class FilmController {
 
     public boolean isNotValid(Film film) {
         return film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)) ||
-                film.getDuration().isNegative() || film.getDuration().isZero();
+               film.getDuration() <= 0;
     }
 }

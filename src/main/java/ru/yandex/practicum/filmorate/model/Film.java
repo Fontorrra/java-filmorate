@@ -27,5 +27,5 @@ public class Film {
     private LocalDate releaseDate;
 
     @NotNull(message = "Продолжительность не должна быть null")
-    private Duration duration;
+    private int duration;
 }
