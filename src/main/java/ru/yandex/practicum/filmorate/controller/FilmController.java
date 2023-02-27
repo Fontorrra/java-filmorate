@@ -15,12 +15,11 @@ import java.util.HashMap;
 public class FilmController {
 
     HashMap<Integer, Film> films = new HashMap<>();
-    private int id;
+    private int id = 1;
 
     @PostMapping
     public Film createFilm(@Valid @RequestBody Film film) throws ValidationException, IdAlreadyExistsException {
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))
-            || film.getDuration().isNegative() || film.getDuration().isZero()) {
+        if (isNotValid(film)) {
             //log.warn("Неправильная дата релиза или длительность фильма");
             throw new ValidationException();
         }
@@ -40,10 +39,9 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film film) throws  ValidationException {
-        if (film.getReleaseDate().isAfter(LocalDate.of(1895, 12, 28))
-                &&(film.getDuration().isNegative() || film.getDuration().isZero())) throw new ValidationException();
-
+    public Film updateFilm(@Valid @RequestBody Film film) throws  ValidationException, IdDoesNotExistsException {
+        if (isNotValid(film)) throw new ValidationException();
+        if (!films.containsKey(film.getId())) throw new IdDoesNotExistsException();
         films.put(film.getId(), film);
         return film;
     }
@@ -53,10 +51,8 @@ public class FilmController {
         return films.values();
     }
 
-    public boolean isValid(Film film) {
-        return !film.getName().isBlank() &&
-                film.getDescription().length() <= 200 &&
-                film.getReleaseDate().isAfter(LocalDate.of(1895, 12, 28)) &&
-                !film.getDuration().isNegative() && !film.getDuration().isZero();
+    public boolean isNotValid(Film film) {
+        return film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)) ||
+                film.getDuration().isNegative() || film.getDuration().isZero();
     }
 }

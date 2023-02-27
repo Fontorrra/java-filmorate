@@ -18,7 +18,7 @@ import java.util.HashMap;
 public class UserController {
 
     HashMap<Integer, User> users = new HashMap<>();
-    private int id = 0;
+    private int id = 1;
 
     @PostMapping
     public User createUser(@Valid @RequestBody User user) throws IdAlreadyExistsException {
@@ -37,7 +37,8 @@ public class UserController {
     }
 
     @PutMapping
-    public User updateUser(@Valid @RequestBody User user) {
+    public User updateUser(@Valid @RequestBody User user) throws IdDoesNotExistsException {
+        if (!users.containsKey(user.getId())) throw new IdDoesNotExistsException();
         users.put(user.getId(), user);
         return user;
     }
