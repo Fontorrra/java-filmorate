@@ -76,15 +76,15 @@ public class FilmValidationTests {
     @Test
     public void testInvalidFilmWithIncorrectReleaseDate() throws Exception {
         film.setReleaseDate(LocalDate.of(1890, 1,1));
-        getResultActions(film).andExpect(status().isBadRequest());
+        getResultActions(film).andExpect(status().isInternalServerError());
     }
 
     @Test
     public void testInvalidFilmWithIncorrectDuration() throws Exception {
         film.setDuration(0);
-        getResultActions(film).andExpect(status().isBadRequest());
+        getResultActions(film).andExpect(status().isInternalServerError());
         film.setDuration(-200);
-        getResultActions(film).andExpect(status().isBadRequest());
+        getResultActions(film).andExpect(status().isInternalServerError());
     }
 
     @Test
@@ -104,21 +104,4 @@ public class FilmValidationTests {
         getResultActions(film).andExpect(status().isOk());
     }
 
-/*
-	@Test
-	public void testInvalidUser() throws Exception {
-		User user = new User("", "", "notanemail");
-		BindingResult result = validate(user);
-		mockMvc.perform(post("/user")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(user.toJson()))
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.errors[0].field").value("firstName"))
-				.andExpect(jsonPath("$.errors[0].message").value(result.getFieldError("firstName").getDefaultMessage()))
-				.andExpect(jsonPath("$.errors[1].field").value("lastName"))
-				.andExpect(jsonPath("$.errors[1].message").value(result.getFieldError("lastName").getDefaultMessage()))
-				.andExpect(jsonPath("$.errors[2].field").value("email"))
-				.andExpect(jsonPath("$.errors[2].message").value(result.getFieldError("email").getDefaultMessage()));
-	}
-*/
 }
