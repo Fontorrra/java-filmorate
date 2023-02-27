@@ -1,8 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exceptions.IdAlreadyExistsException;
+import ru.yandex.practicum.filmorate.exceptions.IdDoesNotExistsException;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
@@ -21,7 +22,7 @@ public class FilmController {
     public Film createFilm(@Valid @RequestBody Film film) throws ValidationException, IdAlreadyExistsException {
         if (isNotValid(film)) {
             //log.warn("Неправильная дата релиза или длительность фильма");
-            throw new ValidationException();
+            throw new ValidationException("Неправильная дата фильма или его длительность");
         }
 
         if (film.getId() == null) {
@@ -32,7 +33,7 @@ public class FilmController {
             id++;
         }
         else if (films.containsKey(film.getId())) {
-            throw new IdAlreadyExistsException();
+            throw new IdAlreadyExistsException("Фильм с аким id уже существует");
         }
         films.put(film.getId(), film);
         return film;
@@ -40,8 +41,8 @@ public class FilmController {
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) throws  ValidationException, IdDoesNotExistsException {
-        if (isNotValid(film)) throw new ValidationException();
-        if (!films.containsKey(film.getId())) throw new IdDoesNotExistsException();
+        if (isNotValid(film)) throw new ValidationException("Неправильная дата фильма или его длительность");
+        if (!films.containsKey(film.getId())) throw new IdDoesNotExistsException("Фидьма с таким id е существует");
         films.put(film.getId(), film);
         return film;
     }
