@@ -74,15 +74,15 @@ public class FilmValidationTests {
     @Test
     public void testInvalidFilmWithIncorrectReleaseDate() throws Exception {
         film.setReleaseDate(LocalDate.of(1890, 1,1));
-        getResultActions(film).andExpect(status().isInternalServerError());
+        getResultActions(film).andExpect(status().isBadRequest());
     }
 
     @Test
     public void testInvalidFilmWithIncorrectDuration() throws Exception {
         film.setDuration(0);
-        getResultActions(film).andExpect(status().isInternalServerError());
+        getResultActions(film).andExpect(status().isBadRequest());
         film.setDuration(-200);
-        getResultActions(film).andExpect(status().isInternalServerError());
+        getResultActions(film).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class FilmValidationTests {
     @Test
     public void testInvalidFilmIWithIncorrectReleaseDate() throws Exception {
         film.setReleaseDate(LocalDate.of(1895, 12, 27));
-        getResultActions(film).andExpect(status().isInternalServerError());
+        getResultActions(film).andExpect(status().isBadRequest());
     }
 
     @Test
