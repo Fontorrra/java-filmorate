@@ -1,11 +1,16 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import ru.yandex.practicum.filmorate.exceptions.IdDoesNotExistsException;
 import ru.yandex.practicum.filmorate.exceptions.NumOfLikesIsZeroException;
 
 import javax.validation.constraints.*;
 import java.time.*;
+import java.util.HashSet;
+import java.util.Set;
 
+@Slf4j
 @Data
 public class Film {
 
@@ -27,7 +32,7 @@ public class Film {
 
     @EqualsAndHashCode.Exclude
     @Setter(AccessLevel.PRIVATE)
-    private int likes;
+    private Set<Long> usersLiked;
 
     @Builder
     Film(final Long id, final String name, final String description, final LocalDate releaseDate, final int duration) {
@@ -36,18 +41,27 @@ public class Film {
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
-        likes = 0;
+        usersLiked = new HashSet<>();
     }
 
-    public void addLike() {
-        likes++;
-    }
-
-    public void removeLike() throws NumOfLikesIsZeroException {
-        if (likes == 0) {
-            throw new NumOfLikesIsZeroException("Невозможно удалить лайк");
+    public void addLike(Long id) {
+        if (usersLiked.contains(id)) {
+            log.warn("Like already exist");
+            throw new IdDoesNotExistsException("Like already exist");
         }
-        likes--;
+        usersLiked.add(id);
+    }
+
+    public void removeLike(Long id) throws NumOfLikesIsZeroException {
+        if (!usersLiked.contains(id)) {
+            log.warn("Like does not exist");
+            throw new IdDoesNotExistsException("Like does not exist");
+        }
+        usersLiked.remove(id);
+    }
+
+    public Integer getLikes() {
+        return usersLiked.size();
     }
 
 }

@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -25,18 +26,18 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PutMapping
+    public User updateUser(@Valid @RequestBody User user) throws IdDoesNotExistsException {
+        log.info("Received PUT request to endpoint /users with body {}", user);
+        if (userService.updateUser(user)) log.info("User {} updated successfully", user);
+        return user;
+    }
+
     @PostMapping
     public User createUser(@Valid @RequestBody User user) throws IdAlreadyExistsException {
         log.info("Received POST request to endpoint /users with body {}", user);
         user = userService.createUser(user);
         log.info("User {} added successfully", user);
-        return user;
-    }
-
-    @PutMapping
-    public User updateUser(@Valid @RequestBody User user) throws IdDoesNotExistsException {
-        log.info("Received PUT request to endpoint /users with body {}", user);
-        if (userService.updateUser(user)) log.info("User {} updated successfully", user);
         return user;
     }
 
@@ -50,7 +51,11 @@ public class UserController {
     public String addFriend(@PathVariable Long id,
                             @PathVariable Long friendId) {
         log.info("Received PUT request to endpoint /users/{}/friends/{}", id, friendId);
-        if (userService.addFriend(id, friendId)) return "Friend successfully added";
+        if (userService.addFriend(id, friendId))
+        {
+            log.info("Friend successfully added");
+            return "Friend successfully added";
+        }
         else return "Something went wrong";
     }
 
@@ -58,7 +63,10 @@ public class UserController {
     public String deleteFriend(@PathVariable Long id,
                             @PathVariable Long friendId) {
         log.info("Received PUT request to endpoint /users/{}/friends/{}", id, friendId);
-        if (userService.deleteFriend(id, friendId)) return "Friend successfully added";
+        if (userService.deleteFriend(id, friendId)) {
+            log.info("Friend successfully deleted");
+            return "Friend successfully deleted";
+        }
         else return "Something went wrong";
     }
 
@@ -74,5 +82,10 @@ public class UserController {
         return userService.getUserFriends(id);
     }
 
-
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public Collection<User> getCommonFriends(@PathVariable Long id,
+                                             @PathVariable Long otherId) {
+        log.info("Received GET request to endpoint /users/{}/friends/common/{}", id, otherId);
+        return userService.getCommonFriends(id, otherId);
+    }
 }

@@ -12,8 +12,7 @@ import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -72,6 +71,17 @@ public class UserService {
             throw new InvalidIdException("id can`t be null or not positive");
         }
         return userStorage.getUser(id);
+    }
+
+    public Collection<User> getCommonFriends(Long id, Long otherId) {
+        if (id == null || otherId == null) {
+            log.warn("id must be not null");
+            throw new UserNotFoundException("id can`t be null");
+        }
+        HashSet<User> friends = new HashSet<>(userStorage.getUserFriends(id));
+        HashSet<User> otherFriends = new HashSet<>(userStorage.getUserFriends(otherId));
+        friends.retainAll(otherFriends);
+        return friends;
     }
 
     public List<User> getAllFriends() {

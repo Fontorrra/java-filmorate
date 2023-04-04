@@ -8,10 +8,7 @@ import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -106,9 +103,9 @@ public class InMemoryUserStorage implements UserStorage {
             log.warn("User with this id = {} does not exist", id);
             throw new UserNotFoundException("User with this id " + id + " does not exist");
         }
-        Set<User> friends = new HashSet<>();
+        LinkedList<User> friends = new LinkedList<>();
         for (Long friendId : user.getFriends()) {
-            friends.add(users.get(friendId));
+            friends.addLast(users.get(friendId));
         }
         return friends;
     }
@@ -119,4 +116,5 @@ public class InMemoryUserStorage implements UserStorage {
         }
         return id;
     }
+
 }

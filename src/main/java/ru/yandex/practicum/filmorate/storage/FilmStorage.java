@@ -12,5 +12,11 @@ public interface FilmStorage {
 
     boolean updateFilm(Film film);
 
-    public Collection<Film> getFilms();
+    Collection<Film> getFilms();
+
+    Film getFilm(Long filmId);
+
+    void addLike(Long filmId, Long userId);
+
+    void removeLike(Long filmId, Long userId);
 }

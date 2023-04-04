@@ -50,12 +50,34 @@ public class FilmController {
         return filmService.getFilms();
     }
 
-    @GetMapping("/popular")
-    public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "10") Integer count) {
-        log.info("Received GET request for /films/popular endpoint");
-        if (count == null || count <= 0) throw new IncorrectCountValueException("count не может быть неположительным или null");
-        return null;
+    @GetMapping("/{filmId}")
+    public Film getFilms(@PathVariable Long filmId) {
+        log.info("Received GET request for /films/{} endpoint", filmId);
+        return filmService.getFilm(filmId);
     }
 
+    @PutMapping("/{filmId}/like/{userId}")
+    public String addLike(@PathVariable Long filmId,
+                          @PathVariable Long userId) {
+        log.info("Received PUT request for /films/{}/like/{} endpoint", filmId, userId);
+        filmService.addLike(filmId, userId);
+        log.info("Like successfully added");
+        return "Like successfully added";
+    }
+
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public String deleteLike(@PathVariable Long filmId,
+                             @PathVariable Long userId) {
+        log.info("Received DELETE request for /films{}/like{} endpoint", filmId, userId);
+        filmService.deleteLike(filmId, userId);
+        log.info("Like successfully deleted");
+        return "Like successfully deleted";
+    }
+
+    @GetMapping("/popular")
+    public Collection<Film> getPopularFilms(@RequestParam(defaultValue = "10") Integer count) {
+        log.info("Received GET request for /films/popular?count={} endpoint", count);
+        return filmService.getMostPopularFilms(count);
+    }
 
 }

@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.IdAlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.IdDoesNotExistsException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -38,7 +39,8 @@ public class InMemoryFilmStorage implements FilmStorage  {
     @Override
     public boolean deleteFilm(long id) {
         if (!films.containsKey(id)) {
-
+            log.warn("Film with id {} does not exist", id);
+            throw new FilmNotFoundException("Film with this id does not exist");
         }
         return false;
     }
@@ -47,7 +49,7 @@ public class InMemoryFilmStorage implements FilmStorage  {
     public boolean updateFilm(Film film) {
         if (!films.containsKey(film.getId())) {
             log.warn("Film with id {} does not exist", film.getId());
-            throw new IdDoesNotExistsException("Film with this id does not exist");
+            throw new FilmNotFoundException("Film with this id does not exist");
         }
         films.put(film.getId(), film);
         return true;
@@ -56,5 +58,28 @@ public class InMemoryFilmStorage implements FilmStorage  {
     @Override
     public Collection<Film> getFilms() {
         return films.values();
+    }
+
+    @Override
+    public Film getFilm(Long filmId) {
+        return films.get(filmId);
+    }
+
+    @Override
+    public void addLike(Long filmId, Long userId) {
+        if (!films.containsKey(filmId)) {
+            log.warn("Film with id {} does not exist", filmId);
+            throw new FilmNotFoundException("Film with this id does not exist");
+        }
+        films.get(filmId).addLike(userId);
+    }
+
+    @Override
+    public void removeLike(Long filmId, Long userId) {
+        if (!films.containsKey(filmId)) {
+            log.warn("Film with id {} does not exist", filmId);
+            throw new IdDoesNotExistsException("Film with this id does not exist");
+        }
+        films.get(filmId).removeLike(userId);
     }
 }
