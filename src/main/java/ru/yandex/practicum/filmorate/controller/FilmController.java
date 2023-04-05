@@ -16,7 +16,7 @@ import java.util.HashMap;
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
-
+ //// test
     HashMap<Integer, Film> films = new HashMap<>();
     private int id = 1;
 
