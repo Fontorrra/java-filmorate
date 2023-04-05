@@ -49,12 +49,10 @@ public class UserController {
     public String addFriend(@PathVariable Long id,
                             @PathVariable Long friendId) {
         log.info("Received PUT request to endpoint /users/{}/friends/{}", id, friendId);
-        if (userService.addFriend(id, friendId))
-        {
+        if (userService.addFriend(id, friendId)) {
             log.info("Friend successfully added");
             return "Friend successfully added";
-        }
-        else return "Something went wrong";
+        } else return "Something went wrong";
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
@@ -64,8 +62,7 @@ public class UserController {
         if (userService.deleteFriend(id, friendId)) {
             log.info("Friend successfully deleted");
             return "Friend successfully deleted";
-        }
-        else return "Something went wrong";
+        } else return "Something went wrong";
     }
 
     @GetMapping("/{id}")

@@ -53,7 +53,8 @@ public class FilmController {
     }
 
     @PutMapping("/{filmId}/like/{userId}")
-    public String addLike(@PathVariable Long filmId, @PathVariable Long userId) {
+    public String addLike(@PathVariable Long filmId,
+                          @PathVariable Long userId) {
         log.info("Received PUT request for /films/{}/like/{} endpoint", filmId, userId);
         filmService.addLike(filmId, userId);
         log.info("Like successfully added");
@@ -61,7 +62,8 @@ public class FilmController {
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
-    public String deleteLike(@PathVariable Long filmId, @PathVariable Long userId) {
+    public String deleteLike(@PathVariable Long filmId,
+                             @PathVariable Long userId) {
         log.info("Received DELETE request for /films{}/like{} endpoint", filmId, userId);
         filmService.deleteLike(filmId, userId);
         log.info("Like successfully deleted");
