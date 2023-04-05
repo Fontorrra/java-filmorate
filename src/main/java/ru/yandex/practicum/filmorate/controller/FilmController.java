@@ -16,6 +16,8 @@ import java.util.Collection;
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
+ //// test
+    private int id = 1;
 
     FilmService filmService;
 
@@ -23,7 +25,6 @@ public class FilmController {
     FilmController(FilmService filmService) {
         this.filmService = filmService;
     }
-
     @PostMapping
     public Film createFilm(@Valid @RequestBody Film film) throws ValidationException, IdAlreadyExistsException {
         log.info("Received POST request for /films endpoint with body {}", film);
