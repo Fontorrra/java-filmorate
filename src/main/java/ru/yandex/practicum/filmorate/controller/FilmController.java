@@ -16,8 +16,6 @@ import java.util.Collection;
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
- //// test
-    private int id = 1;
 
     FilmService filmService;
 
@@ -25,6 +23,7 @@ public class FilmController {
     FilmController(FilmService filmService) {
         this.filmService = filmService;
     }
+
     @PostMapping
     public Film createFilm(@Valid @RequestBody Film film) throws ValidationException, IdAlreadyExistsException {
         log.info("Received POST request for /films endpoint with body {}", film);
@@ -34,7 +33,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film film) throws  ValidationException, IdDoesNotExistsException {
+    public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException, IdDoesNotExistsException {
         log.info("Received PUT request for /films endpoint with body {}", film);
         filmService.updateFilm(film);
         log.info("Film updated: {}", film);
@@ -76,5 +75,4 @@ public class FilmController {
         log.info("Received GET request for /films/popular?count={} endpoint", count);
         return filmService.getMostPopularFilms(count);
     }
-
 }
