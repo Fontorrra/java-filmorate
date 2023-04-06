@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exceptions.AllExceptions;
 import ru.yandex.practicum.filmorate.exceptions.IdAlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.IdDoesNotExistsException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -52,7 +53,10 @@ public class UserController {
         if (userService.addFriend(id, friendId)) {
             log.info("Friend successfully added");
             return "Friend successfully added";
-        } else return "Something went wrong";
+        } else {
+            log.warn("Something went wrong");
+            throw new AllExceptions("Something went wrong");
+        }
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
@@ -62,7 +66,10 @@ public class UserController {
         if (userService.deleteFriend(id, friendId)) {
             log.info("Friend successfully deleted");
             return "Friend successfully deleted";
-        } else return "Something went wrong";
+        } else {
+            log.warn("Something went wrong");
+            throw new AllExceptions("Something went wrong");
+        }
     }
 
     @GetMapping("/{id}")

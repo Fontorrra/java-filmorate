@@ -78,10 +78,6 @@ public class UserService {
         return friends;
     }
 
-    public List<User> getAllFriends() {
-        return null;
-    }
-
     private void setUserName(User user) {
         if (user.getName() == null || user.getName().isBlank()) user.setName(user.getLogin());
     }
