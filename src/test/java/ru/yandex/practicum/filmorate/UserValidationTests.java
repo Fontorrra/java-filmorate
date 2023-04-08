@@ -94,5 +94,5 @@ public class UserValidationTests {
 		user.setEmail("@qwe");
 		getResultActions(user).andExpect(status().isBadRequest());
 	}
-
+//
 }
