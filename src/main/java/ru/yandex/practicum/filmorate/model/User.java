@@ -52,5 +52,5 @@ public class User {
 
     public Collection<Long> getFriend() {
         return friends;
-    }
+    } //
 }
