@@ -29,17 +29,23 @@ public class Film {
     @NotNull(message = "Продолжительность не должна быть null")
     private int duration;
 
+    private Genre genre;
+
+    private MPA mpa;
     @EqualsAndHashCode.Exclude
     @Setter(AccessLevel.PRIVATE)
     private Set<Long> usersLiked;
 
     @Builder
-    Film(final Long id, final String name, final String description, final LocalDate releaseDate, final int duration) {
+    Film(final Long id, final String name, final String description, final LocalDate releaseDate, final int duration,
+         final Genre genre, final MPA mpa) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+        this.genre = genre;
+        this.mpa = mpa;
         usersLiked = new HashSet<>();
     }
 
